@@ -38,6 +38,7 @@ const server_states = {
 // area_name : server endpoint? (/test/0)
 // area_name : server endpoint? (0) if its local
 var area_map = {
+	testScene: null,
 	area01: null,
 	area02: null,
 	area03: null,
