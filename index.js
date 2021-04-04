@@ -7,25 +7,6 @@ const { URL, URLSearchParams } = require('url');
 app.use(cors());
 app.use(bodyParser.json());
 
-var env;
-
-if (process.env.NODE_ENV == "local" || process.env.NODE_ENV == null) {
-
-	var env = "local"
-
-} else if (process.env.NODE_ENV == "development") {
-
-	var env = "development"
-
-} else if (process.env.NODE_ENV == "production") {
-
-	var env = "production"
-
-} else {
-	throw new Error("Something went badly wrong!");
-}
-
-
 // app.get('/', function (req, res) {
 // 	res.send('hello')
 // })
@@ -33,6 +14,7 @@ if (process.env.NODE_ENV == "local" || process.env.NODE_ENV == null) {
 const server_states = {
 	IDLE: "IDLE",
 	ACTIVE: "ACTIVE",
+	UNAVAILABLE: "UNAVAILABLE"
 }
 
 // area_name : server endpoint? (/test/0)
@@ -56,7 +38,12 @@ async function setup() {
 
 		console.log('connecting to url: ' + url);
 	  	let response = await fetch(url)
-	  	let data = await response.json();
+	  		.catch((e) => console.log(e.message));
+	  	let data = await response?.json()
+	  		.catch((e) => console.log(e))
+	  	data = data || {
+	  		state: server_states.UNAVAILABLE
+	  	}
 		// for now assume 1 replica hosted on localhost:8080
 		// let url = 'localhost:8080'
 
@@ -142,12 +129,12 @@ app.get('/gameserver', function(req, res) {
 	// 	// 'origin': 'localhost:8080/',
 	// 	// 'pathname': '/socket.io',
 	// 	'origin': 'test.docker-registry.com/',
-	// 	'pathname': '/test/0/socket.io'
+	// 	'pathname': '/test/0/socket.io'88833333	
 	// });
 })
 
-app.use('/', express.static(__dirname + '/client-build'));
-app.use('/client', express.static(__dirname + '/client-build'));
+// app.use('/', express.static(__dirname + '/client-build'));
+// app.use('/client', express.static(__dirname + '/client-build'));
 
 const port = process.env.PORT || 8081;
 var server = app.listen(port);
@@ -160,7 +147,8 @@ async function assign_server(server, scene, res) {
 	// let url = 'http://test.docker-registry.com' + server + '/assign?' + new URLSearchParams(params);
 	let url = 'http://localhost:' + (8000 + server) + '/assign?' + new URLSearchParams(params);
 	console.log(url);
-  	let response = await fetch(url);
+  	let response = await fetch(url)
+  		.catch('af;sldkfa;slkjf')
   	console.log(response)
 	// res.json({
 	// 	scene: scene,
