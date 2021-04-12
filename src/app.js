@@ -4,13 +4,11 @@ import express from 'express';
 
 import ServerManagerService from '/ServerManagerService';
 
-async function generateServerManager() {
+async function generateServerManager(server_ids) {
 	var app = express();
 	app.use(cors());
 	app.use(bodyParser.json());
 
-	// var server_ids = ['0001', '0002', '0003'];
-	var server_ids = ['0001'];
 	var serverManager = new ServerManagerService(server_ids);
 	let _ = await serverManager.setup();
 

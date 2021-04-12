@@ -2,7 +2,10 @@ import config from './config';
 import generateServerManager from '/app'
 
 async function startServer() {
-  const app = await generateServerManager();
+
+  // var server_ids = ['0001', '0002', '0003'];
+  var server_ids = ['0001', '0002'];
+  const app = await generateServerManager(server_ids);
   const server = app.listen(config.port);
 
   server.on('error', onError);
