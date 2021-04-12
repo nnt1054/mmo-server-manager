@@ -1,10 +1,8 @@
 import config from './config';
 import generateServerManager from '/app'
 
-async function startServer() {
+async function startServer(server_ids) {
 
-  // var server_ids = ['0001', '0002', '0003'];
-  var server_ids = ['0001', '0002'];
   const app = await generateServerManager(server_ids);
   const server = app.listen(config.port);
 
@@ -44,4 +42,5 @@ function onListening(server) {
   console.debug('Listening on ' + bind);
 }
 
-startServer()
+var server_ids = ['0001', '0002', '0003'];
+startServer(server_ids);

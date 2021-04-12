@@ -14,7 +14,6 @@ export default class ServerManagerService {
 	// param: server_ids [str, ...]
 	constructor(server_ids) {
 		this.server_ids = server_ids;
-		this.server_count = this.server_ids.length;
 
 		// To Do: store in Redis isntead of class attribute
 		this.area_map = {
@@ -28,8 +27,13 @@ export default class ServerManagerService {
 	}
 
 	async setup() {
-		for (var i = 0; i < this.server_count; i++) {
+		var retry = false;
+		for (var i = 0; i < this.server_ids.length; i++) {
 			var server_id = this.server_ids[i];
+			if (server_id in this.server_states) {
+				retry = true;
+				continue;
+			}
 			var data = await this.get_server_state(server_id)
 			switch(data.state) {
 				case server_states.IDLE:
@@ -48,6 +52,7 @@ export default class ServerManagerService {
 					break;
 			}
 		}
+		return retry;
 	}
 
 	async get_server_state(server_id) {
@@ -66,9 +71,9 @@ export default class ServerManagerService {
 	get_server_url(server_id, http=true) {
 		// return `http://${config.host_url}/gs/${server_id}`
 		if (http) {
-			return `http://localhost:8000/gs/${server_id}`
+			return `http://localhost:3000/gs/${server_id}`
 		} else {
-			return `localhost:8000/gs/${server_id}`
+			return `localhost:3000/gs/${server_id}`
 		}
 	}
 

@@ -10,7 +10,13 @@ async function generateServerManager(server_ids) {
 	app.use(bodyParser.json());
 
 	var serverManager = new ServerManagerService(server_ids);
-	let _ = await serverManager.setup();
+	let retry = await serverManager.setup();
+	var retryInterval = setInterval(async function() {
+		let retry =  await serverManager.setup();
+		if (!retry) {
+	    	clearInterval(retryInterval);
+		}
+	}, 5000);
 
 	app.get('/', function(req, res) {
 		res.json({
@@ -34,7 +40,7 @@ async function generateServerManager(server_ids) {
 		res.json({
 			scene: scene,
 			// origin: serverManager.get_server_url(server, false),
-			origin: 'http://localhost:8000',
+			origin: 'http://localhost:3000',
 			pathname: `/gs/${server}/socket.io`
 		})
 	})
