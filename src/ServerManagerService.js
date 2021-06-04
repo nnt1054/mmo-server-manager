@@ -18,9 +18,9 @@ export default class ServerManagerService {
 		// To Do: store in Redis isntead of class attribute
 		this.area_map = {
 			testScene: null,
-			area01: null,
-			area02: null,
-			area03: null,
+			area01Scene: null,
+			area02Scene: null,
+			area03Scene: null,
 		}
 		this.server_states = {}
 		this.idle_servers = []
@@ -78,11 +78,15 @@ export default class ServerManagerService {
 	}
 
 	async get_server_from_scene(scene) {
+		console.log('get_server_from_scene');
+		console.log(scene);
 		if (!(scene in this.area_map)) {
+			console.log('didnt find scene')
 			return null
 		}
 		if (!this.area_map[scene]) {
 			if (this.idle_servers.length < 1) {
+				console.log('no idle servers')
 				return null
 			}
 			let server_id = this.idle_servers.shift()
@@ -90,6 +94,7 @@ export default class ServerManagerService {
 				.catch(e => console.log(e.message))
 			return result
 		} else {
+			console.log(this.area_map[scene])
 			return this.area_map[scene]
 		}
 	}
